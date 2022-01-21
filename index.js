@@ -140,27 +140,40 @@ class Game
     }
     roll()
     {
-        var rol  = Math.floor((Math.random() * 6) + 1);
+        var roll  = Math.floor((Math.random() * 6) + 1);
 
-        this.rollDiv.style.backgroundImage = "url(img/dice" + rol + ".png)";
+        this.rollDiv.style.backgroundImage = "url(img/dice" + roll + ".png)";
 
-        
-        //pakken we onze speler, en plaatsen die
-        //met attile
-        
-        //als de speler op vakje 50 komt (index 49) dan laten we het win scherm zien
-        //en dhet speler nummer in de win div
+        this.players[this.playerTurn].atTile += roll;
 
-        //draw
+        if (this.players[this.playerTurn].atTile == 49)
+        {
+            this.winnerDiv.style.display = "block";
+            this.winnerDiv.innerHTML = "player" + this.playerTurn + " won";
+        }
+
+        if (this.players[this.playerTurn].atTile > 49)
+        {
+            var reCalc = this.players[this.playerTurn].atTile - 49;
+            this.players[this.playerTurn].atTile -= reCalc;
+        }
+
+        this.draw();
+
+        var goto = this.tiles[this.players[this.playerTurn].atTile].goto;
+        if (goto != -1)        
+        {
+            this.players[this.playerTurn].atTile = goto;
+        }
+
+        this.draw();
+
+        this.moveToNextPlayer();
 
         //goto afhandelen van de nieuwe tile
         //pak de tile
         //kijk naar goto of die geen -1 is
         //attile player naar de goto zetten
-
-        //draw
-
-        //ga naar volgende speler
     }
     setPawn(playerI, atTile)
     {
