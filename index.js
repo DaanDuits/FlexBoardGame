@@ -21,7 +21,7 @@ class Player
         this.atTile = 0;
         this.index = index;
         this.pawn = document.getElementsByClassName("pawn" + index)[0];
-        pawn.style.display = "block";
+        this.pawn.style.display = "block";
     }
 }
 
@@ -78,30 +78,97 @@ class Game
             let tile = new Tile(div);
             this.tiles.push(tile);
         }
+
+        this.setupGotos();
     }
     setupGotos()
     {
+        let goto = [[6, 14], [16, 4], [17, 23], [27, 33], [29, 10], [38, 43], [39, 20], [45, 34]];
+        
+        for (var i = 0; i < goto.length; i++ )
+        {
+            let element = goto[i];
+
+            let start = element[0] - 1;
+            let end = element[1] - 1;
+
+            let tile = this.tiles[start];
+            tile.goto = end;
+        }
+        
         
     }
     start(amountOfPlayers)
     {
+        this.selectplayersDiv.style.display = "none";
+        this.winnerDiv.style.display = "none";
+        this.mainDiv.style.display = "block";
+
+        let pawns = document.getElementsByClassName("pawn");
+        for (var i = 0; i < pawns.length; i++)
+        {
+            pawns[i].style.display = "none";
+
+        }
         
+        for (var i = 0; i < amountOfPlayers; i++)
+        {
+            let player = new Player(i);
+            this.players.push(player);
+        }
+
+        this.playerTurn = -1;
+        this.moveToNextPlayer();
+
     }
     moveToNextPlayer()
     {
-        
+        this.playerTurn++;
+        if (this.playerTurn == this.players.length)  
+        {
+            this.playerTurn = 0;
+        }
+
+        this.draw()
     }
     draw()
     {
-        
+        for (var i = 0; i < this.players.length; i++)
+        {
+            this.setPawn(i, this.players[i].atTile);
+        }
     }
     roll()
     {
+        var rol  = Math.floor((Math.random() * 6) + 1);
+
+        this.rollDiv.style.backgroundImage = "url(img/dice" + rol + ".png)";
+
         
+        //pakken we onze speler, en plaatsen die
+        //met attile
+        
+        //als de speler op vakje 50 komt (index 49) dan laten we het win scherm zien
+        //en dhet speler nummer in de win div
+
+        //draw
+
+        //goto afhandelen van de nieuwe tile
+        //pak de tile
+        //kijk naar goto of die geen -1 is
+        //attile player naar de goto zetten
+
+        //draw
+
+        //ga naar volgende speler
     }
     setPawn(playerI, atTile)
     {
-        
+        let tile = this.tiles[atTile];
+        let player = this.players[playerI]
+
+        player.pawn.style.left = tile.div.style.left;
+        player.pawn.style.top = tile.div.style.top;
     }
     makeBoardDiv(x, y, tileDisplayNumber)
     {
